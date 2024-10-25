@@ -1,8 +1,8 @@
-# create python enviroment:
+# create python virtual enviroment:
 python3 -m venv venv
 
 # activate enviroment
-# unix (i think i didn't test it):
+# unix (i think, i didn't test it):
 source venv/bin/activate
 # windows powershell:
 .\venv\Scripts\activate\ps1
