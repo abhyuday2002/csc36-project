@@ -1,27 +1,45 @@
 {
-  "expo": {
-    "name": "flowsieUI",
-    "slug": "flowsieUI",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
-  }
+	"expo": {
+		"name": "flowsieUI",
+		"slug": "flowsieUI",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/FlowsieLogo.png",
+		"scheme": "flowsie",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/FlowsieLogoSplash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#fefcfb"
+		},
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/FlowsieLogoIcon.svg",
+				"backgroundColor": "#fefcfb"
+			}
+		},
+		"web": {
+			"favicon": "./assets/FlowsieLogoIcon.svg"
+		},
+		"plugins": [
+			"expo-router",
+			"expo-secure-store",
+			[
+				"expo-font",
+				{
+					"fonts": [
+						"node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf",
+						"node_modules/@expo-google-fonts/inter/Inter_800ExtraBold.ttf",
+						"node_modules/@expo-google-fonts/inter/Inter_600SemiBold.ttf"
+					]
+				}
+			],
+			[
+				"expo-image-picker"
+			]
+		]
+	}
 }
