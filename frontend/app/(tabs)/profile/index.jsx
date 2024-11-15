@@ -6,7 +6,6 @@ import {
 	SafeAreaView,
 	StyleSheet,
 	Text,
-	TextInput,
 	View,
 } from "react-native"
 import * as ImagePicker from "expo-image-picker"
@@ -20,6 +19,7 @@ import {
 	updateProfilePhoto,
 	updateUserDetails,
 } from "../../../utils/authUtils"
+import Input from "../../../components/basic/Input"
 
 export default function ProfileScreen() {
 	const router = useRouter()
@@ -82,7 +82,7 @@ export default function ProfileScreen() {
 				{image && <Pressable onPress={pickProfile}>{image}</Pressable>}
 				<View style={Styles.input}>
 					<Text style={Styles.text}>Name</Text>
-					<TextInput
+					<Input
 						placeholder={user?.name}
 						value={name}
 						autoComplete="name"
@@ -92,7 +92,7 @@ export default function ProfileScreen() {
 				</View>
 				<View style={Styles.input}>
 					<Text style={Styles.text}>Email Address</Text>
-					<TextInput
+					<Input
 						placeholder={user?.email?.text}
 						value={email}
 						inputMode="email"
@@ -103,7 +103,7 @@ export default function ProfileScreen() {
 				</View>
 				<View style={Styles.input}>
 					<Text style={Styles.text}>Password</Text>
-					<TextInput
+					<Input
 						placeholder="********"
 						value={password}
 						autoComplete="new-password"
