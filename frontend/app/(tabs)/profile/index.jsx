@@ -40,7 +40,7 @@ export default function ProfileScreen() {
 
 	useEffect(() => {
 		if (user == null) {
-			router.navigate("/no-profile")
+			router.navigate("/profile/no-profile")
 		} else if (user.profilePic !== null) {
 			setImage(<Image source={{ uri: user.profilePic }} style={styles.image} />)
 		}
@@ -71,7 +71,7 @@ export default function ProfileScreen() {
 
 	const logout = () => {
 		logOut(setUser)
-		router.navigate("/no-profile")
+		router.navigate("/profile/no-profile")
 		return <></>
 	}
 

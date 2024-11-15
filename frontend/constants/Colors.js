@@ -1,7 +1,7 @@
 export default Colors = {
 	// background colors
 	background: "#fefcfb",
-	tintedBackground: "#f8ece7",
+	tintedBackground: "#f8ece7", // "rgba(247,234,229,0.9)"
 	// text colors
 	text: "#5c504f",
 	textPlaceholder: "#a3928f",
