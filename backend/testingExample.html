@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!--
+    Lucas Tuan
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>
+            Testing website
+        </title>
+
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+
+<body>
+
+    <table>
+        <tr>
+            <td><label for="firstname">Name/Username</label></td>
+            <td><input id="firstname" name="First Name" placeholder="Joe" required></td>
+        </tr>
+        
+        <tr>
+            <td><label for="email">Email</label></td>
+            <td><input id="email" name="Primary Email" placeholder="example@website.com" required></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password</label></td>
+            <td><input id="password" name="Password" type="password" required></td>
+        </tr>
+        
+        <tr>
+            <td><label for="phone">Phone Number</label></td>
+            <td><input id="phone" name="Phone Number" placeholder="123-4567"></td>
+        </tr>
+
+        <tr>
+            <td colspan="2"><button id="submit">Submit</button></td>
+        </tr>
+    </table>
+
+    <button id="view">View</button>
+
+    <div>
+        <div>
+            Enter info and press submit to create an account.
+            Enter the same username and password and press view to see the info
+        </div>
+        <textarea cols="40" rows="10" readonly id="output">Will fill when view is used</textarea>
+    </div>
+
+
+<script>
+    var user = 'admin';
+    var password = 'password123';
+
+
+    var base64encodedData = btoa(user + ":" + password);
+
+    // Example of making a new user / profile
+    document.getElementById("submit").addEventListener("click", () =>{
+        var name = document.getElementById("firstname").value;
+        var pass = document.getElementById("password").value;
+        var email = document.getElementById("email").value;
+        var num = document.getElementById("phone").value;
+        
+        console.log(JSON.stringify({
+                "username": name,
+                "password": pass,
+                "name": name,
+                "email": email,
+                "phoneNumber": num
+        })
+        )
+
+        fetch("http://127.0.0.1:8000/users/create", {
+            method: "POST",
+            headers: {
+                'Authorization': 'Basic ' + base64encodedData,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: name,
+                password: pass,
+                name: name,
+                email: email,
+                phoneNumber: num
+            })
+        })
+            .then((response) => console.log(response))
+    });
+
+    // example of logging in to get the info of an user
+    document.getElementById("view").addEventListener("click", () =>{
+
+        var name = document.getElementById("firstname").value;
+        var pass = document.getElementById("password").value;
+
+        console.log(JSON.stringify({
+                "username": name,
+                "password": pass,
+        })
+        )
+
+        // encode the username and password with base64
+        var base64encodedData = btoa(name + ":" + pass);
+
+        fetch("http://127.0.0.1:8000/login/", {
+            method: "GET",
+            headers: {
+                'Authorization': 'Basic ' + base64encodedData,
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => document.getElementById("output").textContent = JSON.stringify(json.results[0]))
+        });
+
+</script>
+
+</body>
+</html>
