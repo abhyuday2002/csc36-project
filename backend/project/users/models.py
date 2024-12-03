@@ -2,7 +2,9 @@ from django.db import models
 
 # Create your models here.
 
-class Thing(models.Model):
+class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True, default="")
-    owner = models.ForeignKey('auth.User', related_name='things', on_delete=models.CASCADE)
+    email = models.CharField(max_length=100, default="")
+    phoneNumber = models.IntegerField(default=0)
+    owner = models.ForeignKey('auth.User', related_name='profile', on_delete=models.CASCADE)

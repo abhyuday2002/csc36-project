@@ -5,7 +5,7 @@ python3 -m venv venv
 # unix (i think, i didn't test it):
 source venv/bin/activate
 # windows powershell:
-.\venv\Scripts\activate\ps1
+.\venv\Scripts\activate.ps1
 
 # install requirments
 pip install -r requirements.txt

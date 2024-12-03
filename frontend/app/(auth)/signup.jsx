@@ -1,18 +1,12 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
 import { Link, useRouter } from "expo-router"
 import React, { useContext, useState } from "react"
-import {
-	Pressable,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	TextInput,
-	View,
-} from "react-native"
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native"
 import Colors from "../../constants/Colors"
 import Styles from "../../constants/Styles"
 import { signUp } from "../../utils/authUtils"
 import { UserContext } from "../../context/UserContext"
+import Input from "../../components/basic/Input"
 
 export default function SignupScreen() {
 	const [name, setName] = useState("")
@@ -57,36 +51,36 @@ export default function SignupScreen() {
 			<View style={styles.container}>
 				<Text style={styles.header}>Sign Up</Text>
 				{error && <Text style={Styles.error}>{error}</Text>}
-				<TextInput
+				<Input
 					value={name}
 					placeholder="Name"
 					autoComplete="name"
 					onChangeText={(text) => setName(text)}
 					style={Styles.textInput}
-				></TextInput>
-				<TextInput
+				/>
+				<Input
 					value={email}
 					placeholder="Email"
 					inputMode="email"
 					autoComplete="email"
 					onChangeText={(text) => setEmail({ text })}
 					style={Styles.textInput}
-				></TextInput>
-				<TextInput
+				/>
+				<Input
 					value={password}
 					placeholder="Password"
 					autoComplete="new-password"
 					onChangeText={(text) => setPassword(text)}
 					style={Styles.textInput}
-				></TextInput>
-				<TextInput
+				/>
+				<Input
 					value={reenter}
 					placeholder="Re-enter Password"
 					autoComplete="new-password"
 					onChangeText={(text) => setReenter(text)}
 					style={Styles.textInput}
 					placeholderTextColor={Colors.placeholderTextColor}
-				></TextInput>
+				/>
 				<Pressable onPress={onSignup} style={Styles.button}>
 					<Text style={Styles.buttonText}>Sign Up</Text>
 				</Pressable>
