@@ -5,13 +5,14 @@ import {
 	FlatList,
 	StyleSheet,
 	Image,
-	Dimensions,
+	Modal,
+	Alert,
 } from "react-native"
 import Styles from "../../../constants/Styles"
 import Header from "../../../components/Header"
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
 import Colors from "../../../constants/Colors"
-import { useCallback, useState } from "react"
+import { useCallback, useContext, useState } from "react"
 import PoseCard from "../../../components/flows/PoseCard"
 import IconButton from "../../../components/basic/IconButton"
 import Poses from "../../../temp/poses"
@@ -20,6 +21,10 @@ import SearchBar from "../../../components/search/SearchBar"
 import DraggableFlatList from "react-native-draggable-flatlist"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import VariationsSelect from "../../../components/flows/VariationsSelect"
+import { UserContext } from "../../../context/UserContext"
+import FlowModal from "../../../components/flows/FlowModal"
+import SavesModal from "../../../components/flows/SavesModal"
+import { useRouter } from "expo-router"
 
 /*
  * pose: {
@@ -34,37 +39,42 @@ import VariationsSelect from "../../../components/flows/VariationsSelect"
  *
  */
 
-const { width } = Dimensions.get("window")
+const filters = {
+	Difficulty: {
+		Beginner: false,
+		Intermediate: false,
+		Advanced: false,
+	},
+	Position: {
+		Standing: false,
+		Seated: false,
+		Supine: false,
+		Prone: false,
+		"Arm Balance": false,
+		Supported: false,
+	},
+	Posture: {
+		"Back Bend": false,
+		"Forward Bend": false,
+		"Lateral Bend": false,
+		Twist: false,
+		Balance: false,
+		Neutral: false,
+	},
+}
 
 export default function FlowCreatorTab() {
+	const router = useRouter()
+	const { user, setUser } = useContext(UserContext)
 	const [sequence, setSequence] = useState([])
 	const [currentPose, setCurrentPose] = useState(null)
 	const [duration, setDuration] = useState(null)
 	const [poses, setPoses] = useState(Poses)
 	const [idCounter, setIdCounter] = useState(1)
-	const filters = {
-		Difficulty: {
-			Beginner: false,
-			Intermediate: false,
-			Advanced: false,
-		},
-		Position: {
-			Standing: false,
-			Seated: false,
-			Supine: false,
-			Prone: false,
-			"Arm Balance": false,
-			Supported: false,
-		},
-		Posture: {
-			"Back Bend": false,
-			"Forward Bend": false,
-			"Lateral Bend": false,
-			Twist: false,
-			Balance: false,
-			Neutral: false,
-		},
-	}
+	const [title, setTitle] = useState("New Yoga Flow")
+	// showSaved & showPreview can't be set true when !user
+	const [showSaved, setShowSaved] = useState(false)
+	const [showPreview, setShowPreview] = useState(false)
 
 	const updateDuration = () => {
 		const updatedPose = { ...currentPose, duration: duration }
@@ -106,6 +116,33 @@ export default function FlowCreatorTab() {
 		setIdCounter(idCounter + 1)
 	}
 
+	const useSave = (flow) => {
+		if (!flow) {
+			return
+		}
+		setTitle(flow.title)
+		setSequence(flow.sequence)
+		setShowSaved(false)
+		// setIdCounter(flow.maxId + 1)
+	}
+
+	const handleCloseSaved = useCallback(
+		(flows) => {
+			// to implement: save updated flows to user
+			setShowSaved(false)
+		},
+		[user]
+	)
+
+	const handleSave = (flow) => {
+		if (!user) {
+			// handle when not signed in
+		}
+		user && setUser({ ...user, flows: [...user.flows, flow] })
+		setShowPreview(false)
+	}
+
+
 	const renderEditor = useCallback(
 		() => (
 			<>
@@ -140,9 +177,42 @@ export default function FlowCreatorTab() {
 				<View style={styles.header}>
 					<Header title="Flow Maker" />
 					<View style={styles.headerButtons}>
-						<IconButton name="content-save" onPress={() => {}} />
-						<IconButton name="menu" onPress={() => {}} />
+						<IconButton
+							name="content-save"
+							onPress={() => {
+								if (user) setShowPreview(true)
+								else {
+									Alert.alert("Sign In", "Sign in is required to save flows", [
+										{ text: "Cancel", style: "cancel" },
+										{ text: "Sign In", onPress: () => router.push("/login") },
+									])
+								}
+							}}
+						/>
+						<IconButton
+							name="menu"
+							onPress={() => {
+								if (user) setShowSaved(true)
+								else
+									Alert.alert(
+										"Sign In",
+										"Sign in is required to view saved flows",
+										[
+											{ text: "Cancel", style: "cancel" },
+											{ text: "Sign In", onPress: () => router.push("/login") },
+										]
+									)
+							}}
+						/>
 					</View>
+				</View>
+				<View style={{ marginHorizontal: 10, marginBottom: 10 }}>
+					<Input
+						icon="pencil-outline"
+						value={title}
+						onChangeText={(text) => setTitle(text)}
+						textStyle={styles.title}
+					/>
 				</View>
 				<View style={styles.editView}>
 					{currentPose ? (
@@ -180,7 +250,6 @@ export default function FlowCreatorTab() {
 						)}
 					/>
 				</View>
-
 				<View style={styles.addView}>
 					<SearchBar
 						filters={filters}
@@ -192,18 +261,28 @@ export default function FlowCreatorTab() {
 					<FlatList
 						data={poses}
 						renderItem={({ item }) => (
-							<PoseCard
-								pose={item}
-								size={width / 3}
-								onPress={handleAdd}
-								showName
-							/>
+							<PoseCard pose={item} onPress={handleAdd} showName />
 						)}
 						numColumns={3}
 						contentContainerStyle={{ gap: 10 }}
 						columnWrapperStyle={{ gap: 10 }}
 					/>
 				</View>
+
+				{showSaved && (
+					<SavesModal
+						savedFlows={user.flows}
+						onClose={handleCloseSaved}
+						onEditSave={useSave}
+					/>
+				)}
+				{showPreview && (
+					<FlowModal
+						flow={{ title: title, sequence: sequence }}
+						onSave={handleSave}
+						onCancel={() => setShowPreview(false)}
+					/>
+				)}
 			</SafeAreaView>
 		</GestureHandlerRootView>
 	)
@@ -213,11 +292,17 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		height: 60,
 	},
 	headerButtons: {
 		flexDirection: "row",
-		paddingVertical: 20,
+		paddingVertical: 15,
 		gap: 10,
+	},
+	title: {
+		...Styles.subheader,
+		fontSize: 20,
+		color: Colors.inactiveUI,
 	},
 	editView: {
 		flex: 1.35,

@@ -9,8 +9,9 @@ export default function Input({
 	value,
 	onChangeText,
 	placeholder,
-    slim,
+	slim,
 	style,
+	textStyle,
 	...props
 }) {
 	return (
@@ -30,7 +31,7 @@ export default function Input({
 					onChangeText={onChangeText}
 					placeholder={placeholder}
 					placeholderTextColor={Colors.textPlaceholder}
-					style={Styles.textInput}
+					style={{ ...Styles.textInput, ...textStyle }}
 					{...props}
 				/>
 			</View>

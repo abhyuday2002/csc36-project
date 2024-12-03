@@ -8,27 +8,27 @@ export default function VariationsSelect({ pose, updatePose }) {
 
 	useEffect(() => {
 		if (pose?.variations) {
-			console.log(variations)
 			setVariations(pose.variations.map((index) => Poses[index]))
+		} else {
+			setVariations([pose])
 		}
-        else {
-            setVariations([pose])
-        }
 	}, [pose])
 
-	const renderButton = useCallback(({ item }) => {
-		// image in circle
-		// border diff depending on if selected
-		console.log(item)
-		return (
-			<Pressable onPress={() => updatePose(item)}>
-				<Image
-					source={item.image}
-					style={item.name == pose.name ? styles.varSelected : styles.varImage}
-				/>
-			</Pressable>
-		)
-	}, [pose])
+	const renderButton = useCallback(
+		({ item }) => {
+			return (
+				<Pressable onPress={() => updatePose(item)}>
+					<Image
+						source={item.image}
+						style={
+							item.name == pose.name ? styles.varSelected : styles.varImage
+						}
+					/>
+				</Pressable>
+			)
+		},
+		[pose]
+	)
 
 	return (
 		<View style={{ flex: 1 }}>
