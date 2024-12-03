@@ -93,7 +93,7 @@ export default function ProfileScreen() {
 				<View style={Styles.input}>
 					<Text style={Styles.text}>Email Address</Text>
 					<Input
-						placeholder={user?.email?.text}
+						placeholder={user?.email}
 						value={email}
 						inputMode="email"
 						autoComplete="email"

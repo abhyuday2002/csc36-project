@@ -13,22 +13,22 @@ export default function App() {
 	const [appIsReady, setAppIsReady] = useState(false)
 	const [user, setUser] = useState(null)
 
-	// useEffect(() => {
-	// 	async function getUserFromStorage() {
-	// 		try {
-	// 			let storedUser = await SecureStore.getItemAsync("user")
-	// 			if (storedUser !== null) {
-	// 				setUser(JSON.parse(storedUser))
-	// 			}
-	// 		} catch (e) {
-	// 			console.warn(e)
-	// 		} finally {
-	// 			setAppIsReady(true)
-	// 		}
-	// 	}
+	useEffect(() => {
+		async function getUserFromStorage() {
+			try {
+				let storedUser = await SecureStore.getItemAsync("user")
+				if (storedUser !== null) {
+					setUser(JSON.parse(storedUser))
+				}
+			} catch (e) {
+				console.warn(e)
+			} finally {
+				setAppIsReady(true)
+			}
+		}
 
-	// 	getUserFromStorage()
-	// }, [])
+		getUserFromStorage()
+	}, [])
 
 	// const onLayoutRootView = useCallback(async () => {
 	// 	if (appIsReady) {

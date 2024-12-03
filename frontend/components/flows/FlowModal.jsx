@@ -45,7 +45,7 @@ export default function FlowModal({ flow, onCancel, onEdit, onSave }) {
 					</Pressable>
 					{onSave && (
 						<Pressable
-							onPress={() => onSave({ ...flow, difficulty })}
+							onPress={() => onSave({ ...flow, difficulty: difficulty })}
 							style={{ flex: 1 }}
 						>
 							<Text style={Styles.buttonText}>Save</Text>

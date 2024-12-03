@@ -13,7 +13,12 @@ import Styles from "../../constants/Styles"
 import FlowModal from "./FlowModal"
 import Colors from "../../constants/Colors"
 
-export default function SavesModal({ savedFlows, onClose, onEditSave }) {
+export default function SavesModal({
+	savedFlows,
+	onClose,
+	onEditSave,
+	visible,
+}) {
 	const [flows, setFlows] = useState(savedFlows)
 	const [showPreview, setShowPreview] = useState(false)
 	const [previewFlow, setPreview] = useState(null)
@@ -35,7 +40,6 @@ export default function SavesModal({ savedFlows, onClose, onEditSave }) {
 					<Text style={Styles.text}>{flow.difficulty}</Text>
 				</Pressable>
 				<View style={{ flexDirection: "row", gap: 10 }}>
-					<IconButton name="eye-outline" onPress={() => handleSelect(flow)} />
 					<IconButton
 						name="trash-can-outline"
 						onPress={() => {
@@ -48,10 +52,8 @@ export default function SavesModal({ savedFlows, onClose, onEditSave }) {
 		[flows]
 	)
 
-	console.log(showPreview)
-
 	return (
-		<Modal animationType="slide">
+		<Modal visible={visible} animationType="slide">
 			<SafeAreaView style={Styles.container}>
 				<IconButton name={"arrow-left"} onPress={() => onClose(flows)} />
 				<Text style={Styles.header}>Saved Flows</Text>
@@ -76,6 +78,7 @@ export default function SavesModal({ savedFlows, onClose, onEditSave }) {
 						onEdit={() => {
 							setShowPreview(false)
 							onEditSave(previewFlow)
+							onClose(flows)
 						}}
 					/>
 				)}

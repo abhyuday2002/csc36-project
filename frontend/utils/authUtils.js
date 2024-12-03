@@ -101,7 +101,7 @@ export async function updateSavedFlows(flows, user, setUser) {
 	try {
 		const updatedUser = { ...user, flows: flows }
 		await SecureStore.setItemAsync("user", JSON.stringify(updatedUser))
-		setUser
+		setUser(updatedUser)
 	} catch (e) {
 		console.warn(e)
 	}

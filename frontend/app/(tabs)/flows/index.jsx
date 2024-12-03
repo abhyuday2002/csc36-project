@@ -25,6 +25,7 @@ import { UserContext } from "../../../context/UserContext"
 import FlowModal from "../../../components/flows/FlowModal"
 import SavesModal from "../../../components/flows/SavesModal"
 import { useRouter } from "expo-router"
+import { updateSavedFlows } from "../../../utils/authUtils"
 
 /*
  * pose: {
@@ -123,25 +124,38 @@ export default function FlowCreatorTab() {
 		setTitle(flow.title)
 		setSequence(flow.sequence)
 		setShowSaved(false)
-		// setIdCounter(flow.maxId + 1)
+		setIdCounter(
+			flow.sequence.reduce(
+				(max, pose) => (max = max > pose.id ? max : pose.id),
+				0
+			) + 1
+		)
 	}
 
 	const handleCloseSaved = useCallback(
 		(flows) => {
+			if (!user) {
+				setShowPreview(false)
+				return
+			}
 			// to implement: save updated flows to user
+			updateSavedFlows(flows, user, setUser)
 			setShowSaved(false)
 		},
 		[user]
 	)
 
-	const handleSave = (flow) => {
-		if (!user) {
-			// handle when not signed in
-		}
-		user && setUser({ ...user, flows: [...user.flows, flow] })
-		setShowPreview(false)
-	}
-
+	const handleSave = useCallback(
+		(flow) => {
+			if (!user) {
+				setShowPreview(false)
+				return
+			}
+			updateSavedFlows([...user.flows, flow], user, setUser)
+			setShowPreview(false)
+		},
+		[user]
+	)
 
 	const renderEditor = useCallback(
 		() => (
@@ -269,11 +283,12 @@ export default function FlowCreatorTab() {
 					/>
 				</View>
 
-				{showSaved && (
+				{user !== null && (
 					<SavesModal
 						savedFlows={user.flows}
 						onClose={handleCloseSaved}
 						onEditSave={useSave}
+						visible={showSaved}
 					/>
 				)}
 				{showPreview && (
