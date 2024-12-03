@@ -2,7 +2,6 @@ import {
 	View,
 	Text,
 	SafeAreaView,
-	Pressable,
 	FlatList,
 	StyleSheet,
 	Image,
@@ -12,12 +11,15 @@ import Styles from "../../../constants/Styles"
 import Header from "../../../components/Header"
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
 import Colors from "../../../constants/Colors"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import PoseCard from "../../../components/flows/PoseCard"
 import IconButton from "../../../components/basic/IconButton"
 import Poses from "../../../temp/poses"
 import Input from "../../../components/basic/Input"
 import SearchBar from "../../../components/search/SearchBar"
+import DraggableFlatList from "react-native-draggable-flatlist"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import VariationsSelect from "../../../components/flows/VariationsSelect"
 
 /*
  * pose: {
@@ -38,8 +40,8 @@ export default function FlowCreatorTab() {
 	const [sequence, setSequence] = useState([])
 	const [currentPose, setCurrentPose] = useState(null)
 	const [duration, setDuration] = useState(null)
-	const [variations, setVariations] = useState(null)
 	const [poses, setPoses] = useState(Poses)
+	const [idCounter, setIdCounter] = useState(1)
 	const filters = {
 		Difficulty: {
 			Beginner: false,
@@ -66,11 +68,23 @@ export default function FlowCreatorTab() {
 
 	const updateDuration = () => {
 		const updatedPose = { ...currentPose, duration: duration }
+		const index = sequence.indexOf(currentPose)
 		setCurrentPose(updatedPose)
 		setSequence([
-			...sequence.slice(0, updatedPose.id - 1),
+			...sequence.slice(0, index),
 			updatedPose,
-			...sequence.slice(updatedPose.id),
+			...sequence.slice(index + 1),
+		])
+	}
+
+	const updateVariation = (newPose) => {
+		const updatedPose = { ...newPose, id: currentPose.id }
+		const index = sequence.indexOf(currentPose)
+		setCurrentPose(updatedPose)
+		setSequence([
+			...sequence.slice(0, index),
+			updatedPose,
+			...sequence.slice(index + 1),
 		])
 	}
 
@@ -80,112 +94,118 @@ export default function FlowCreatorTab() {
 	}
 
 	const handleDelete = (poseId) => {
-		setSequence(sequence.slice(0, poseId - 1).concat(sequence.slice(poseId)))
-		if (currentPose?.id === poseId) {
-			setCurrentPose(null)
-		}
-	}
-
-	const handleCloseModal = () => {
-		setModalVisible(false)
+		setSequence(sequence.filter((pose) => pose.id !== poseId))
+		setCurrentPose(null)
 	}
 
 	const handleAdd = (pose) => {
-		const newPose = { ...pose, id: sequence.length + 1 }
+		const newPose = { ...pose, id: idCounter }
 		setSequence([...sequence, newPose])
 		setCurrentPose(newPose)
 		setDuration(pose.duration)
-		setModalVisible(false)
+		setIdCounter(idCounter + 1)
 	}
 
-	const renderEditor = () => (
-		<>
-			<Image source={currentPose.image} style={styles.editImage} />
-			<View style={styles.editDetails}>
-				<Text style={Styles.subheader}>{currentPose.name}</Text>
-				<Input
-					value={duration}
-					onChangeText={setDuration}
-					onEndEditing={updateDuration}
-					inputMode="decimal"
-					icon="clock-outline"
-					slim
+	const renderEditor = useCallback(
+		() => (
+			<>
+				<Image source={currentPose.image} style={styles.editImage} />
+				<View style={styles.editDetails}>
+					<Text numberOfLines={1} style={styles.editHeader}>
+						{currentPose.name}
+					</Text>
+					<Text style={styles.editDescription}>{currentPose.difficulty}</Text>
+					<Input
+						value={duration}
+						onChangeText={setDuration}
+						onEndEditing={updateDuration}
+						inputMode="decimal"
+						icon="clock-outline"
+						slim
+					/>
+					<VariationsSelect pose={currentPose} updatePose={updateVariation} />
+				</View>
+				<IconButton
+					name="trash-can-outline"
+					onPress={() => handleDelete(currentPose.id)}
 				/>
-				<Text style={Styles.text}>Variations</Text>
-			</View>
-			<IconButton
-				name="trash-can-outline"
-				onPress={() => handleDelete(currentPose.id)}
-			/>
-		</>
+			</>
+		),
+		[currentPose]
 	)
 
 	return (
-		<SafeAreaView style={Styles.container}>
-			<View style={styles.header}>
-				<Header title="Flow Maker" />
-				<View style={styles.headerButtons}>
-					<IconButton name="content-save" onPress={() => {}} />
-					<IconButton name="menu" onPress={() => {}} />
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<SafeAreaView style={Styles.container}>
+				<View style={styles.header}>
+					<Header title="Flow Maker" />
+					<View style={styles.headerButtons}>
+						<IconButton name="content-save" onPress={() => {}} />
+						<IconButton name="menu" onPress={() => {}} />
+					</View>
 				</View>
-			</View>
-			<View style={styles.editView}>
-				{currentPose ? (
-					renderEditor()
-				) : (
-					<Text style={styles.editPlaceholder}>
-						Start a new flow by adding a pose
-					</Text>
-				)}
-			</View>
-			<View style={styles.seqView}>
-				<FlatList
-					data={sequence}
-					renderItem={({ item }) => (
-						<PoseCard
-							pose={item}
-							onPress={handleSelect}
-							isCurrent={item === currentPose}
-						/>
+				<View style={styles.editView}>
+					{currentPose ? (
+						renderEditor()
+					) : (
+						<Text style={styles.editPlaceholder}>
+							Select a pose to add it to the flow.
+						</Text>
 					)}
-					keyExtractor={(item) => item.id}
-					horizontal
-					contentContainerStyle={{ padding: 5 }}
-					ItemSeparatorComponent={() => (
-						<MaterialCommunityIcons
-							name="arrow-right"
-							size={24}
-							style={styles.seqSeparator}
-							color={Colors.border}
-						/>
-					)}
-				/>
-			</View>
+				</View>
+				<View style={styles.seqView}>
+					<DraggableFlatList
+						data={sequence}
+						renderItem={({ item, getIndex, drag, isActive }) => (
+							<PoseCard
+								pose={item}
+								onPress={handleSelect}
+								isCurrent={item === currentPose}
+								onLongPress={drag}
+								index={getIndex() + 1}
+								isActive={isActive}
+							/>
+						)}
+						onDragEnd={({ data }) => setSequence(data)}
+						keyExtractor={(item) => item.id}
+						horizontal
+						containerStyle={{ padding: 5, flex: 1 }}
+						ItemSeparatorComponent={() => (
+							<MaterialCommunityIcons
+								name="arrow-right"
+								size={24}
+								style={styles.seqSeparator}
+								color={Colors.border}
+							/>
+						)}
+					/>
+				</View>
 
-			<View style={styles.addView}>
-				<SearchBar
-					filters={filters}
-					defaultData={Poses}
-					setData={setPoses}
-					searchField="name"
-				/>
+				<View style={styles.addView}>
+					<SearchBar
+						filters={filters}
+						defaultData={Poses}
+						setData={setPoses}
+						searchField="name"
+					/>
 
-				<FlatList
-					data={poses}
-					renderItem={({ item }) => (
-						<PoseCard
-							pose={item}
-							size={width / 3}
-							onPress={handleAdd}
-							showName
-						/>
-					)}
-					numColumns={3}
-					contentContainerStyle={{ gap: 10 }}
-					columnWrapperStyle={{ gap: 10 }}
-				/>
-			</View>
-		</SafeAreaView>
+					<FlatList
+						data={poses}
+						renderItem={({ item }) => (
+							<PoseCard
+								pose={item}
+								size={width / 3}
+								onPress={handleAdd}
+								showName
+							/>
+						)}
+						numColumns={3}
+						contentContainerStyle={{ gap: 10 }}
+						columnWrapperStyle={{ gap: 10 }}
+					/>
+				</View>
+			</SafeAreaView>
+		</GestureHandlerRootView>
 	)
 }
 
@@ -200,7 +220,7 @@ const styles = StyleSheet.create({
 		gap: 10,
 	},
 	editView: {
-		flex: 1.15,
+		flex: 1.35,
 		flexDirection: "row",
 		backgroundColor: Colors.tintedBackground,
 		borderRadius: 10,
@@ -219,7 +239,7 @@ const styles = StyleSheet.create({
 	},
 	editImage: {
 		backgroundColor: Colors.background,
-		flex: 1,
+		flex: 0.75,
 		height: "100%",
 		resizeMode: "contain",
 		justifyContent: "center",
@@ -234,6 +254,11 @@ const styles = StyleSheet.create({
 	editHeader: {
 		...Styles.subheader,
 		fontSize: 16,
+	},
+	editDescription: {
+		...Styles.text,
+		fontSize: 13,
+		color: Colors.inactiveUI,
 	},
 	editInputs: {
 		flex: 1,

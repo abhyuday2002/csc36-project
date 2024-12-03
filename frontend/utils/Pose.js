@@ -6,6 +6,6 @@ export class Pose {
         this.position = position
         this.bend = bend
         this.duration = duration
-        this.variations = variations ? variations : []
+        this.variations = variations ? variations : null
     }
 }

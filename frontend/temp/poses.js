@@ -1,19 +1,19 @@
 import { Pose } from "../utils/Pose"
 
 const Variations = {
-	chair: ["Chair", "Revolved Chair"],
-	childs: ["Child's", "Extended Child's"],
-	downwardDog: ["Downward Dog", "Three-legged Downward Dog"],
-	forearmBalance: ["Forearm Balance"], //, "Scorpion"],
-	handstand: ["Handstand", "Handstand Splits", "Scorpion Handstand"],
-	invertedStaff: ["Inverted Staff", "One-legged Inverted Staff"],
-	locust: ["Locust I", "Locust III"],
-	pigeon: ["Half Pigeon", "One-legged King Pigeon", "Mermaid"],
-	plank: ["Plank", "Forearm Plank"],
-	sideAngle: ["Extended Side Angle", "Revolved Side Angle"],
-	standingForwardBend: ["Standing Forward Bend", "Standing Forward Bend with Raised Arms", "Half Standing Forward Bend"],
-	warrior: ["Warrior I", "Warrior II", "Warrior III"],
-	wideLeggedBend: ["Wide-legged Bend I", "Wide-legged Bend III"],
+	chair: [3, 36], // ["Chair", "Revolved Chair"],
+	childs: [4, 13], // ["Child's", "Extended Child's"],
+	downwardDog: [11, 12], // ["Downward Dog", "Three-legged Downward Dog"],
+	forearmBalance: [16], // ["Forearm Balance"], //, "Scorpion"],
+	handstand: [22, 23, 38], // ["Handstand", "Handstand Splits", "Scorpion Handstand"],
+	invertedStaff: [24, 30], // ["Inverted Staff", "One-legged Inverted Staff"],
+	locust: [25, 26], // ["Locust I", "Locust III"],
+	pigeon: [19, 31, 29], // ["Half Pigeon", "One-legged King Pigeon", "Mermaid"],
+	plank: [32, 17], // ["Plank", "Forearm Plank"],
+	sideAngle: [15, 37], // ["Extended Side Angle", "Revolved Side Angle"],
+	standingForwardBend: [45, 46, 21], // ["Standing Forward Bend", "Standing Forward Bend with Raised Arms", "Half Standing Forward Bend"],
+	warrior: [51, 52, 53], // ["Warrior I", "Warrior II", "Warrior III"],
+	wideLeggedBend: [74, 75], // ["Wide-legged Bend I", "Wide-legged Bend III"],
 }
 
 const Poses = [

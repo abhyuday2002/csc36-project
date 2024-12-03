@@ -10,12 +10,13 @@ import {
 import Styles from "../../constants/Styles"
 import Colors from "../../constants/Colors"
 
-const {width} = Dimensions.get("window")
+const { width } = Dimensions.get("window")
 
-function PoseCard({ pose, onPress, isCurrent, showName, size }) {
+function PoseCard({ pose, onPress, onLongPress, index, isCurrent, showName }) {
 	return (
 		<Pressable
 			onPress={() => onPress(pose)}
+			onLongPress={onLongPress}
 			style={isCurrent ? styles.selected : styles.container}
 		>
 			<ImageBackground
@@ -24,7 +25,7 @@ function PoseCard({ pose, onPress, isCurrent, showName, size }) {
 				imageStyle={styles.image}
 			>
 				<View style={styles.bar}>
-					<Text style={Styles.text}>{pose?.id}</Text>
+					<Text style={Styles.text}>{index}</Text>
 				</View>
 				{showName && (
 					<View style={styles.titleWrapper}>
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: Colors.border,
 		overflow: "hidden",
-		maxWidth: width/3-30
+		maxWidth: width / 3 - 30,
 	},
 	selected: {
 		backgroundColor: Colors.background,
