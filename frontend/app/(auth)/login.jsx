@@ -14,6 +14,7 @@ import Styles from "../../constants/Styles"
 import Fonts from "../../constants/Fonts"
 import { logIn } from "../../utils/authUtils"
 import { UserContext } from "../../context/UserContext"
+import Input from "../../components/basic/Input"
 
 export default function LoginScreen() {
 	const [email, setEmail] = useState("")
@@ -55,23 +56,21 @@ export default function LoginScreen() {
 			<View style={styles.container}>
 				<Text style={styles.header}>Login</Text>
 				{error && <Text style={Styles.error}>{error}</Text>}
-				<TextInput
+				<Input
 					value={email}
 					placeholder="Email"
 					inputMode="email"
 					autoComplete="email"
 					onChangeText={(text) => setEmail({ text })}
-					style={Styles.textInput}
 					placeholderTextColor={Colors.placeholderText}
-				></TextInput>
-				<TextInput
+				/>
+				<Input
 					value={password}
 					placeholder="Password"
 					secureTextEntry
 					autoComplete="current-password"
 					onChangeText={(text) => setPassword(text)}
-					style={Styles.textInput}
-				></TextInput>
+				/>
 				<Pressable onPress={onLogin} style={Styles.button}>
 					<Text style={Styles.buttonText}>Log In</Text>
 				</Pressable>

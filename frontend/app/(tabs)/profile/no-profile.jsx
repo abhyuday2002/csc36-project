@@ -14,7 +14,7 @@ export default function NoProfileScreen() {
 
 	useEffect(() => {
 		if (user) {
-			router.navigate("/profile")
+			router.navigate("/profile/")
 		}
 	}, [user])
 

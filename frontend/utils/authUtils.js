@@ -14,6 +14,7 @@ export async function logIn(email, password, setUser) {
 		role = "student"
 		profilePic = null
 		classes = []
+		flows = []
 
 		const userDetails = {
 			name: name,
@@ -21,6 +22,7 @@ export async function logIn(email, password, setUser) {
 			role: role,
 			profilePic: profilePic,
 			classes: classes,
+			flows: flows,
 		}
 		await SecureStore.setItemAsync("user", JSON.stringify(userDetails))
 		setUser(userDetails)
@@ -45,6 +47,7 @@ export async function signUp(name, email, password, setUser) {
 			role: "student",
 			profilePic: null,
 			classes: [],
+			flows: [],
 		}
 		await SecureStore.setItemAsync("user", JSON.stringify(userDetails))
 		setUser(userDetails)
@@ -89,6 +92,16 @@ export async function updateProfilePhoto(uri, user, setUser) {
 		const newUserDetails = { ...user, profilePic: uri }
 		await SecureStore.setItemAsync("user", JSON.stringify(newUserDetails))
 		setUser(newUserDetails)
+	} catch (e) {
+		console.warn(e)
+	}
+}
+
+export async function updateSavedFlows(flows, user, setUser) {
+	try {
+		const updatedUser = { ...user, flows: flows }
+		await SecureStore.setItemAsync("user", JSON.stringify(updatedUser))
+		setUser(updatedUser)
 	} catch (e) {
 		console.warn(e)
 	}

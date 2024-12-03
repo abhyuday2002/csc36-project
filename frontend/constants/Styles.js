@@ -5,6 +5,7 @@ import Fonts from "./Fonts"
 // default styles for components
 export default Styles = StyleSheet.create({
 	container: {
+		flex: 1,
 		marginHorizontal: 35,
 	},
 	text: {
@@ -16,7 +17,7 @@ export default Styles = StyleSheet.create({
 		color: Colors.text,
 		fontFamily: Fonts.InterExtraBold,
 		fontSize: 28, // or 20 or 21   or 18 or 24
-		paddingVertical: 20,
+		paddingVertical: 15,
 	},
 	subheader: {
 		color: Colors.text,
@@ -34,23 +35,40 @@ export default Styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	textInput: {
-		height: 40,
 		paddingLeft: 5,
 		color: Colors.text,
 		fontSize: 16,
-		borderBottomWidth: 2,
-		borderBottomColor: Colors.inactiveUI,
+		width: "100%",
 	},
 	button: {
 		backgroundColor: Colors.ui,
+		borderWidth: 2,
 		borderRadius: 10,
+		borderColor: Colors.ui,
 	},
 	buttonText: {
-		marginVertical: 12,
+		backgroundColor: Colors.ui,
+		padding: 12,
+		borderWidth: 1,
+		borderRadius: 10,
+		borderColor: Colors.ui,
+		overflow: "hidden",
 		color: Colors.background,
 		textAlign: "center",
 		fontFamily: Fonts.InterSemiBold,
-		fontSize: 16,
+		fontSize: 18,
+	},
+	buttonTextInverse: {
+		backgroundColor: Colors.background,
+		padding: 12,
+		borderWidth: 1,
+		borderRadius: 10,
+		borderColor: Colors.ui,
+		overflow: "hidden",
+		color: Colors.ui,
+		textAlign: "center",
+		fontFamily: Fonts.InterSemiBold,
+		fontSize: 18,
 	},
 	link: {
 		fontFamily: Fonts.InterRegular,
