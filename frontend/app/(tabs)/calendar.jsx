@@ -20,7 +20,7 @@ const CalendarScreen = () => {
 	const user = useContext(UserContext).user
 
 	const [availableClasses, setAvailableClasses] = useState({
-		"2024-10-24": [
+		"2024-12-20": [
 			{
 				id: 1,
 				time: "09:00",
@@ -55,7 +55,7 @@ const CalendarScreen = () => {
 				onPress: () => {
 					Alert.alert("Success", "Class booked successfully!")
 					classId.spots--
-					user?.classes.push(classId.id)
+					user?.classes.push({date: selectedDate, ...classId})
 				},
 			},
 		])
