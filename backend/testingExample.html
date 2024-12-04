@@ -54,6 +54,8 @@
     var user = 'admin';
     var password = 'password123';
 
+    var url = '24.144.93.150:80'
+    // var url = 'http://127.0.0.1:8000/'
 
     var base64encodedData = btoa(user + ":" + password);
 
@@ -73,7 +75,7 @@
         })
         )
 
-        fetch("http://127.0.0.1:8000/users/create", {
+        fetch("http://" + url + "/users/create", {
             method: "POST",
             headers: {
                 'Authorization': 'Basic ' + base64encodedData,
@@ -105,7 +107,7 @@
         // encode the username and password with base64
         var base64encodedData = btoa(name + ":" + pass);
 
-        fetch("http://127.0.0.1:8000/login/", {
+        fetch("http://" + url + "/login/", {
             method: "GET",
             headers: {
                 'Authorization': 'Basic ' + base64encodedData,
